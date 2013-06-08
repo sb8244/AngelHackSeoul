@@ -2,4 +2,16 @@ extends layout
 
 block content
   h1= title
-  p Welcome to #{title}
+  
+  ul.nav.nav-pills
+    li#pill-food.active
+        a(href='#') Food
+      li#pill-market.active
+        a(href='#') Market
+      li#pill-clothing.active
+        a(href='#') Clothing
+      li#pill-music.active
+        a(href='#') Music
+      li#pill-exhibit.active
+        a(href='#') Exhibitions
+  
