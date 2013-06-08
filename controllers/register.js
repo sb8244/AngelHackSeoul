@@ -26,19 +26,26 @@ exports.process = function(req, res) {
 		var display_name = req.param('display_name');
 		var description = req.param('description');
 
-		var tmp_path = req.files.picture.path;
-		var target_path = '/uploads/users/';
-   		var cryptName = crypto.createHash('md5').update(req.files.picture.name + new Date().getTime()).digest("hex");
-    	var filename = cryptName + path.extname(req.files.picture.name);
-    	target_path += filename;
+		if(req.files != undefined) {
+			var tmp_path = req.files.picture.path;
+			var target_path = '/uploads/users/';
+	   		var cryptName = crypto.createHash('md5').update(req.files.picture.name + new Date().getTime()).digest("hex");
+	    	var filename = cryptName + path.extname(req.files.picture.name);
+	    	target_path += filename;
 
-    	//target_path now contains something like /uploads/users/12312381723180273.png
-    	fs.rename(tmp_path, "public" + target_path, function(err) {
-	        if (err) throw err;
-	        vendorProvider.register(email, password, display_name, description, filename, function(err, result) {
+	    	//target_path now contains something like /uploads/users/12312381723180273.png
+	    	fs.rename(tmp_path, "public" + target_path, function(err) {
+		        if (err) throw err;
+		        vendorProvider.register(email, password, display_name, description, filename, function(err, result) {
+		        	if(err) throw err;
+		        	res.send(200);
+		        });
+		    });
+	    } else {
+	    	vendorProvider.register(email, password, display_name, description, null, function(err, result) {
 	        	if(err) throw err;
-	        	res.redirect("/vendor");
-	        });
-	    });
+	        	res.send(200);
+		    });
+	    }
 	}
 }
