@@ -8,7 +8,9 @@ var host = "localhost";
 var port = 27017;
 
 (function() {
-	var dbToUse = "development";
+	var dbToUse = "prod";
+	if(global.testing === true)
+		dbToUse = "dev";
 	db = new Db(dbToUse, new Server(
 		host, 
 		port,

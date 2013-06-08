@@ -1,0 +1,2 @@
+db.vendors.ensureIndex({"private.email": 1}, {unique: true});
+db.vendors.ensureIndex({"current_location.point": "2dsphere" });

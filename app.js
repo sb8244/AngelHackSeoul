@@ -3,10 +3,11 @@
  * Module dependencies.
  */
 
+global.testing = true;
 var express = require('express')
   , http = require('http')
   , path = require('path')
-  , router = require('./conf/router');
+  , router = require('./router');
 
 var app = express();
 
