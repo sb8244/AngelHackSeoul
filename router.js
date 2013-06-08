@@ -10,6 +10,7 @@ exports.create = function( app ) {
 
 	app.get('/register', register.index);
 	app.post('/register', register.process);
+	app.get('/list', index.list);
 
 	app.get('/login', login.index);
 	app.post('/login', login.process);
@@ -19,7 +20,6 @@ exports.create = function( app ) {
 
 	app.get('/ajax/logged', ajax.loggedIn);
 	
-	//app.get('/logout', show.list);
 	
 	app.get('/vendor/*', requireAuthentication);
 	app.get('/vendor', index.index);
