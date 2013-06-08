@@ -11,6 +11,18 @@ a {
 .padbot { margin-bottom: 15px !important; }
 #map_canvas { width: 100%; position: absolute; left:0 ;}
 .nav-pills { margin-bottom: 0px; }
+.thumbnail { margin: 0 auto;}
+.content > img {
+	float: left;
+	padding-right: 5px;
+}
+@media(min-width: 980px) {
+	/*.thumbnail { max-width: 325px; }*/
+	.container-fluid {
+		max-width: 1240px;
+		margin: 0 auto;
+	}
+}
 
 @media (max-width: 979px) {
 	.navbar-fixed-top .navbar-inner {
@@ -22,4 +34,12 @@ a {
 		margin-right: 0px;
 		margin-left: -20px;
 	}
+}
+#pop_list .span6 {
+	margin-bottom: 10px;
+	margin-right: 10px;
+}
+.nav>li>a {
+	background-color: #eee;
+	color: #08c;
 }
