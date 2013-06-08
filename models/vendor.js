@@ -1,4 +1,5 @@
 var crypto = require('crypto');
+var mongo = require("./mongo");
 
 exports.register = function(email, password, display_name, description, path, callback) {
 	var md5pass = crypto.createHash('md5').update(password).digest("hex");
