@@ -1,0 +1,1 @@
+{ "indexes" : [ { "v" : 1, "key" : { "_id" : 1 }, "ns" : "dev.vendors", "name" : "_id_" }, { "v" : 1, "key" : { "private.email" : 1 }, "unique" : true, "ns" : "dev.vendors", "name" : "private.email_1" }, { "v" : 1, "key" : { "current_location.point" : "2dsphere" }, "ns" : "dev.vendors", "name" : "current_location.point_2dsphere" } ] }
