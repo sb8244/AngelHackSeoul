@@ -1,4 +1,5 @@
-var loc = null;
+var lat = null;
+var lon = null;
 $(document).ready(function() {
 	if(geoPosition.init()) {
 		geoPosition.getCurrentPosition(success, error, {timeout: 10000, enableHighAccuracy: true});
@@ -6,15 +7,14 @@ $(document).ready(function() {
 		error({code: 3});
 	}
 	function success(position) {
-		var lat = position.coords.latitude;
-		var lon = position.coords.longitude;
-		var latlng = new google.maps.LatLng(lat, lon);
-		loc = latlng;
-		alert("ok");
-		console.log(loc);
+		lat = position.coords.latitude;
+		lon = position.coords.longitude;
+		refreshMap();
 	}
 	function error(err){ 
-		alert(err.code);
+		lat = 37.507618;
+		lon = 127.04510849999997;
+		refreshMap();
 		if(err.code == 1) {
 			//permission denied
 		} else if(err.code == 2) {
@@ -24,19 +24,82 @@ $(document).ready(function() {
 		}
 	}
 });
-
-$(document).ready(function() {
-	$(".nav-pills > li").click(function() {
-		$(this).toggleClass("active");
+var refreshMap = function() {
+	if(lat != null && lon != null) {
 		var elements = $(".nav-pills > li.active");
 		var activeTypes = $.map(elements,function(n,i) {
 			return $(elements[i]).data("type");
 		});
-		
+		var within = 10;
+		var data = {
+			types: activeTypes,
+			within: within,
+			lat: lat,
+			lon: lon
+		}
+		var query = $.param(data);
+		var endpoint = "/api/v1/points/list";
+
+		$.get(endpoint + "?" + query).success(function(data) {
+			$('#map_canvas').gmap('clear', 'markers');
+			$.each(data, function(i, item) {
+				window.d = Date.parse(item.current_location.expires);
+				var lat = item.current_location.point.coordinates[1];
+				var lon = item.current_location.point.coordinates[0];
+				var html = "<b>" + item.company_name + "</b>";
+				if(item.pictures.length > 0)
+					html += "<div class='content'><img src='/images/vendors/"+item.pictures[0]+"'/></div>";
+				if(item.current_location.description != null)
+					html += "<div>" + item.current_location.description + "</div>";
+				else
+					html += "<div>" + item.description + "</div>";
+				html += "<div>Providing you with <b>" + item.current_location.type + "</b> until about <b>";
+				html += new Date(Date.parse(item.current_location.expires)).toLocaleTimeString() + "</b></div>";
+				var $marker = $("#map_canvas").gmap('addMarker', {'position': lat + "," + lon});
+				$marker.click(function() {
+					$('#map_canvas').gmap('openInfoWindow', {'content': html}, this);
+				});
+			});
+		});
+	} else {
+		alert("No lat lon");
+	}
+}
+$(document).ready(function() {
+	$(".nav-pills > li").click(function() {
+		$(this).toggleClass("active");
+		refreshMap();
 	});
 	$.get("/ajax/logged").success(function(html) {
 		$("#signup").remove();
-		$("#signin").parent().html(html);
+		$("#signin").parent().parent().html(html);
+		$('.dropdown-toggle').dropdown();
+		$("#checkin").click(function() {
+			$.get("/checkin").success(function(html) {
+				$(".dropdown-menu").html(html);
+				$(".dropdown-menu form").submit(function(e) {
+					var data = {
+						lat: lat,
+						lon: lon,
+						type: $("#type").val(),
+						hours: $("#hours").val()
+					}
+					if(data.type == 'x' || data.hours == 'x') {
+						alert("Please set the event type and duration");
+						return false;
+					} else {
+						var query = $.param(data);
+						var endpoint = "/api/v1/vendor/checkIn";
+						$.get(endpoint + "?" + query).success(function(d) {
+							alert("This " + data.type + " event has popped up for " + data.hours + " hours!");
+							$('.dropdown.open .dropdown-toggle').dropdown('toggle');
+							refreshMap();
+						});
+						return false;
+					}
+				});
+			});
+		});
 	}).error(function() {
 		$("#signup").removeClass("hidden");
 		$("#signin").removeClass("hidden");
@@ -67,7 +130,7 @@ $(document).ready(function() {
 			$(".dropdown-menu").html(html);
 		});
 	});
-	$('.dropdown-menu').on('click', 'form', function (e) {
+	$('body').on('click', '.dropdown-menu form', function (e) {
 		e.stopPropagation();
 	});
 	$('.dropdown-menu').on('submit', 'form', function(e) {

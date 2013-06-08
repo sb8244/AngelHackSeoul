@@ -2,6 +2,7 @@ var index = require('./controllers/index');
 var register = require('./controllers/register');
 var login = require('./controllers/login');
 var ajax = require('./controllers/ajax');
+var checkin = require('./controllers/checkin');
 var pointsAPI = require('./controllers/api/points');
 
 exports.create = function( app ) {
@@ -13,6 +14,8 @@ exports.create = function( app ) {
 	app.get('/login', login.index);
 	app.post('/login', login.process);
 	app.get('/logout', login.logout);
+
+	app.get('/checkin', checkin.index);
 
 	app.get('/ajax/logged', ajax.loggedIn);
 	
