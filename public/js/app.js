@@ -1,3 +1,4 @@
+var loc = null;
 $(document).ready(function() {
 	if(geoPosition.init()) {
 		geoPosition.getCurrentPosition(success, error, {timeout: 10000, enableHighAccuracy: true});
@@ -8,9 +9,9 @@ $(document).ready(function() {
 		var lat = position.coords.latitude;
 		var lon = position.coords.longitude;
 		var latlng = new google.maps.LatLng(lat, lon);
-		self.get('map').panTo(latlng);
-		self.refresh();
-		var $marker = $("#map").gmap('addMarker', {'position': lat + "," + lon})
+		loc = latlng;
+		alert("ok");
+		console.log(loc);
 	}
 	function error(err){ 
 		alert(err.code);
