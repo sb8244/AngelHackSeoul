@@ -3,11 +3,15 @@ var mongo = require("./mongo");
 
 exports.register = function(email, password, display_name, description, path, callback) {
 	var md5pass = crypto.createHash('md5').update(password).digest("hex");
+	var paths = [path];
+	if(path == null)
+		paths = [];
 	var newVendor = {
 		company_name: display_name,
 		description: description,
-		pictures: [path],
+		pictures: paths,
 		current_location: {
+			type: "food",
 			time: new Date(0),
 			expires: new Date(0),
 			point: {

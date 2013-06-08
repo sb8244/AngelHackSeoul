@@ -5,6 +5,7 @@ vendors
 	description: "Text representing company",
 	pictures: [ "loc1", "loc2" ],
 	current_location: {
+		type: "food",
 		time: DateTime()
 		expires: DateTime()
 		point: {
@@ -14,6 +15,7 @@ vendors
 	},
 	past_locations: [
 		{
+			type: "food",
 			time: DateTime(),
 			expires: DateTime(),
 			point: {

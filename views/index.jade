@@ -1,17 +1,20 @@
 extends layout
 
-block content
-  h1= title
-  
+block content  
   ul.nav.nav-pills
-    li#pill-food.active
-        a(href='#') Food
-      li#pill-market.active
-        a(href='#') Market
-      li#pill-clothing.active
-        a(href='#') Clothing
-      li#pill-music.active
-        a(href='#') Music
-      li#pill-exhibit.active
-        a(href='#') Exhibitions
-  
+    li#pill-food.active(data-type="food")
+        a(href='#') 
+          i(class="icon-food icon-large")
+      li#pill-market.active(data-type="shopping")
+        a(href='#')
+          i(class="icon-money icon-large")
+      li#pill-party.active(data-type="party")
+        a(href='#')
+          i(class="icon-glass icon-large")
+      li#pill-music.active(data-type="music")
+        a(href='#')
+          i(class="icon-music icon-large")
+      li#pill-exhibit.active(data-type="exhibit")
+        a(href='#')
+          i(class="icon-camera-retro icon-large")
+  div#map_canvas
