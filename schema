@@ -1,0 +1,31 @@
+vendors
+
+{
+	company_name: "Company / Individual Name",
+	description: "Text representing company",
+	pictures: [ "loc1", "loc2" ],
+	current_location: {
+		time: DateTime()
+		expires: DateTime()
+		point: {
+			type: "Point",
+			coordinates: [lon, lat]
+		}
+	},
+	past_locations: [
+		{
+			time: DateTime(),
+			expires: DateTime(),
+			point: {
+				type: "Point",
+				coordinates: [lon, lat]
+			}
+		}
+	],
+	private: {
+		email: "email",
+		password: "md5 common salt",
+		name: "Individual Name",
+		api_token: "double md5 token"
+	}
+}
