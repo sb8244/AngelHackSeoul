@@ -1,5 +1,5 @@
-
-
+var crypto = require('crypto');
+var vendorProvider = require('../models/vendor');
 exports.index = function(req, res) {
 	res.render('register', {
 		title: 'Signup'
@@ -28,14 +28,16 @@ exports.process = function(req, res) {
 
 		var tmp_path = req.files.picture.path;
 		var target_path = '/uploads/users/';
-		var crypto = require('crypto');
    		var cryptName = crypto.createHash('md5').update(req.files.picture.name + new Date().getTime()).digest("hex");
     	target_path += cryptName + path.extname(req.files.picture.name);
 
     	//target_path now contains something like /uploads/users/12312381723180273.png
     	fs.rename(tmp_path, "public" + target_path, function(err) {
 	        if (err) throw err;
-	        
+	        vendorProvider.register(email, password, display_name, description, target_path, function(err, result) {
+	        	if(err) throw err;
+	        	res.redirect("/vendor");
+	        });
 	    });
 	}
 }
