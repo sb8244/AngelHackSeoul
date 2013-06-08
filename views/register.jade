@@ -29,6 +29,11 @@ block content
             label.control-label(for='description') Description
             .controls
               textarea#description.input-xlarge(name='description', placeholder='')
+          //
+            .control-group
+              label.control-label(for='picture') Profile Picture
+              .controls
+                input#picture.input-xlarge(type='file', accept="image/*", capture="capture", name='picture')
           .control-group
             //
                Button 
