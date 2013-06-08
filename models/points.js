@@ -1,6 +1,6 @@
 var mongo = require("./mongo");
 var async = require("async");
-exports.list = function(lat, lon, within, callback) {
+exports.list = function(lat, lon, within, types, callback) {
 	var params = 
 	{
 		"current_location.point":
@@ -19,7 +19,8 @@ exports.list = function(lat, lon, within, callback) {
 		"current_location.expires":
 		{
 			$gt: new Date()
-		}
+		},
+		"current_location.type": { $in: types }
 	};
 	var limit_fields = {
 		_id: 0,
@@ -70,15 +71,17 @@ var checkOut = function(id, callback) {
 }
 exports.checkOut = checkOut;
 
-exports.checkIn = function(id, lat, lon, hours, callback) {
+exports.checkIn = function(id, lat, lon, hours, type, desc, callback) {
 	checkOut(id, function(err, res) {
 		if(err) return callback(err, null);
 		mongo.getCollection("vendors", function(err, col) {
 			if(err) return callback(err, null);
 			mongo.getObjectID(id, function(object_id) {
 				var expirationDate = new Date();
-				expirationDate.setHours(expirationDate.getHours() + hours);
+				expirationDate.setHours(expirationDate.getHours() + parseInt(hours));
 				var newLocation = {
+					description: desc,
+					type: type,
 					time: new Date(),
 					expires: expirationDate,
 					point: {
@@ -86,6 +89,7 @@ exports.checkIn = function(id, lat, lon, hours, callback) {
 						coordinates : [parseFloat(lon), parseFloat(lat)]
 					}
 				}
+				console.log(newLocation);
 				col.update({_id:object_id}, {$set: {current_location: newLocation}}, function(err, res) {
 					if(err) return callback(err, null);
 					else return callback(null, true);
