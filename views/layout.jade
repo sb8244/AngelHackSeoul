@@ -1,10 +1,16 @@
-doctype 5
-html
-  head
-    title= title
-    link(rel='stylesheet', href='/css/bootstrap.min.css')
-    link(rel='stylesheet', href='/css/bootstrap-responsive.min.css')
-    link(rel='stylesheet', href='/css/style.css')
-    script(type='text/javascript', src='/js/bootstrap.min.js')
+!!! 5
+html(lang='en', xmlns='http://www.w3.org/1999/xhtml')
+
+  include ./includes/head
+  
   body
-    block content
+    .wrapper
+      include ./includes/header
+      .container
+        .main-content
+          .main-head
+            block main
+          block content
+      .push
+    include ./includes/footer
+    include ./includes/foot
