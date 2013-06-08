@@ -1,23 +1,4 @@
-
-
-form.form-horizontal(action='', method='POST')
-    fieldset
-        #legend
-          legend Login
-        .control-group
-          //
-             Email 
-          label.control-label(for='email') Email
-          .controls
-            input#email.input-xlarge(type='email', name='email', placeholder='')
-        .control-group
-          //
-             Password
-          label.control-label(for='password') Password
-          .controls
-            input#password.input-xlarge(type='password', name='password', placeholder='')
-        .control-group
-          //
-             Button 
-          .controls
-            button.btn.btn-success Login
+form.form-horizontal(action='/login', method='POST')
+  input#email.input-xlarge.padbot(type='email', name='email', placeholder='Email')
+  input#password.input-xlarge.padbot(type='password', name='password', placeholder='Password')
+  button.btn.btn-primary.btn-block Login
