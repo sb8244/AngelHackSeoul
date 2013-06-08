@@ -21,6 +21,8 @@ app.use(express.logger('dev'));
 app.use(express.bodyParser());
 app.use(expressValidator);
 app.use(express.methodOverride());
+  app.use(express.cookieParser('your secret here'));
+  app.use(express.session());
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
 
