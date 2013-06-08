@@ -27,6 +27,12 @@ exports.list = function(req, res) {
  */
 exports.checkOut = function(req, res) {
 	var id = req.param("id");
+	if(id == undefined) {
+		id = req.session.user_id;
+	}
+	if(id == undefined) {
+		throw new Exception("No access");
+	}
 	points.checkOut(id, function(err, result) {
 		if(err) throw err;
 		res.send(result, 200);
