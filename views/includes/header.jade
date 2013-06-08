@@ -1,13 +1,14 @@
 .navbar.navbar-fixed-top(style='position: absolute;')
     .navbar-inner
         .container(style='width: auto; padding: 0 20px;')
-          ul.nav.navbar-fixed-top
-            a.brand(href='/') Popup
+          a.brand(href='/') Popup
+          ul.nav.navbar-fixed-top.pull-right
             ul.nav.pull-right
               li
-                a(href='#signin') Sign In
-              li
-                a(href='/register', role='button', data-toggle='modal') Sign up
+                a(href='/register' ) Sign up
+              li.dropdown
+                a(class="dropdown-toggle", id="signin", href="#", data-toggle="dropdown") Sign In
+                .dropdown-menu(style="padding:15px;")
               //
                  Button to trigger modal 
 
