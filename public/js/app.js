@@ -26,19 +26,20 @@ $(document).ready(function() {
 		}
 	}
 });
+var centerMap = function() {
+	if($("#map_canvas").length != 0) {
+		var origin = new google.maps.LatLng(lat, lon);
+		$("#map_canvas").gmap('get','map').setOptions({'center':origin, 'zoom':15});
+	}
+}
 $(document).ready(function() {
 	if($("#map_canvas").length != 0)
 		$("#pill-grid").removeClass("active");
 	else if($("#pop_list").length != 0)
 		$("#pill-grid").addClass("active")
 			.find("a").attr("href", "/");
+	centerMap();
 });
-var centerMap = function() {
-	if($("#map_canvas").length != 0) {
-		var origin = new google.maps.LatLng(lat, lon);
-		$("#map_canvas").gmap('get','map').setOptions({'center':origin, 'zoom':17});
-	}
-}
 var refresh = function() {
 	if($("#map_canvas").length != 0)
 		refreshMap();
@@ -121,8 +122,7 @@ var refreshMap = function() {
 		$.get(endpoint + "?" + query).success(function(data) {
 			$('#map_canvas').gmap('clear', 'markers');
 			var $marker = $("#map_canvas").gmap('addMarker', {
-				'position': lat + "," + lon,
-				'bounds':true
+				'position': lat + "," + lon
 			});
 			$.each(data, function(i, item) {
 				var lat = item.current_location.point.coordinates[1];
@@ -136,8 +136,7 @@ var refreshMap = function() {
 				html += "<p>Providing you with <b>" + item.current_location.type + "</b> until about <b>";
 				html += new Date(Date.parse(item.current_location.expires)).toLocaleTimeString() + "</b></p>";
 				var $marker = $("#map_canvas").gmap('addMarker', {
-					'position': lat + "," + lon, 
-					'bounds':true,
+					'position': lat + "," + lon,
 					'icon': iconArray[item.current_location.type]
 				});
 				$marker.click(function() {
