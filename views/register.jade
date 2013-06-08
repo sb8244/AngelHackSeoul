@@ -1,7 +1,7 @@
 extends layout
 
 block content
-  form.form-horizontal(action='', method='POST')
+  form.form-horizontal(action='', method='POST', id="register-form")
       fieldset
           #legend
             legend Create an account!
@@ -10,7 +10,7 @@ block content
                Username 
             label.control-label(for='display_name') Display Name
             .controls
-              input#username.input-xlarge(type='text', name='display_name', placeholder='')
+              input#display_name.input-xlarge(type='text', name='display_name', placeholder='')
           .control-group
             //
                E-mail 
@@ -25,10 +25,15 @@ block content
               input#password.input-xlarge(type='password', name='password', placeholder='')
           .control-group
             //
-               Password 
-            label.control-label(for='password_confirm') Password (Confirm)
+               Description 
+            label.control-label(for='description') Description
             .controls
-              input#password_confirm.input-xlarge(type='password', name='password_confirm', placeholder='')
+              textarea#description.input-xlarge(name='description', placeholder='')
+          //
+            .control-group
+              label.control-label(for='picture') Profile Picture
+              .controls
+                input#picture.input-xlarge(type='file', accept="image/*", capture="capture", name='picture')
           .control-group
             //
                Button 
