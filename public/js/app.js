@@ -10,11 +10,13 @@ $(document).ready(function() {
 		lat = position.coords.latitude;
 		lon = position.coords.longitude;
 		refresh();
+		centerMap();
 	}
 	function error(err){ 
 		lat = 37.507618;
 		lon = 127.04510849999997;
 		refresh();
+		centerMap();
 		if(err.code == 1) {
 			//permission denied
 		} else if(err.code == 2) {
@@ -24,11 +26,31 @@ $(document).ready(function() {
 		}
 	}
 });
+$(document).ready(function() {
+	if($("#map_canvas").length != 0)
+		$("#pill-grid").removeClass("active");
+	else if($("#pop_list").length != 0)
+		$("#pill-grid").addClass("active")
+			.find("a").attr("href", "/");
+});
+var centerMap = function() {
+	if($("#map_canvas").length != 0) {
+		var origin = new google.maps.LatLng(lat, lon);
+		$("#map_canvas").gmap('get','map').setOptions({'center':origin, 'zoom':17});
+	}
+}
 var refresh = function() {
 	if($("#map_canvas").length != 0)
-			refreshMap();
+		refreshMap();
 	else if($("#pop_list").length != 0)
 		refreshList();
+}
+var imgArray = {
+	"shopping": "/images/vendors/shopping200x283.png",
+	"food": "/images/vendors/food200x283.png",
+	"party": "/images/vendors/party200x283.png",
+	"music": "/images/vendors/music200x283.png",
+	"exhibit": "/images/vendors/exhibit200x283.png",
 }
 var refreshList = function() {
 	if(lat != null && lon != null) {
@@ -47,25 +69,40 @@ var refreshList = function() {
 		var endpoint = "/api/v1/points/list";
 
 		$.get(endpoint + "?" + query).success(function(data) {
-			$('#map_canvas').gmap('clear', 'markers');
+			$("#pop_list").html("");
 			$.each(data, function(i, item) {
-				 var html = '<li class="span2"> <div class="thumbnail">';
-                     html += '<img src="http://placehold.it/200x283" alt="ALT NAME"> ';
-				     html += '<p>' +item.company_name+'</p>';
-				     if(item.current_location.description != null)
-                         html += "<div>" + item.current_location.description + "</div>";
-				     html += '<p>' + item.current_location.type + '</p> ';
-				     html += '</div></div></li> ';          
+				if(i % 2 == 1)
+					var html = "<div class='row-fluid'>";
+				else
+					var html = "<div>";
+			 	html += '<li class="span6"> <div class="thumbnail">';
+			 	html += "<h4>" + item.company_name + "</h4>";
+                html += '<img src="'+imgArray[item.current_location.type]+'" alt="ALT NAME"> ';
+			    if(item.current_location.description != null)
+					html += "<p>" + item.current_location.description + "</p>";
+				else
+					html += "<p>" + item.description + "</p>";
+			    html += "<p>Providing you with <b>" + item.current_location.type + "</b> until about <b>";
+				html += new Date(Date.parse(item.current_location.expires)).toLocaleTimeString() + "</b></p>";
+	
+			    html += '</div></div></li></div>';          
    
-   $("#pop_list").append(html)
-
+  				$("#pop_list").append(html);
 			});
 		});
 	} else {
 		alert("No lat lon");
 	}
 }
+
 var refreshMap = function() {
+	var iconArray = {
+		"shopping": "/images/markers/supermarket.png",
+		"food": "/images/markers/bread.png",
+		"party": "/images/markers/liquor.png",
+		"music": "/images/markers/music.png",
+		"exhibit": "/images/markers/publicart.png"
+	}
 	if(lat != null && lon != null) {
 		var elements = $(".nav-pills > li.active");
 		var activeTypes = $.map(elements,function(n,i) {
@@ -83,19 +120,26 @@ var refreshMap = function() {
 
 		$.get(endpoint + "?" + query).success(function(data) {
 			$('#map_canvas').gmap('clear', 'markers');
+			var $marker = $("#map_canvas").gmap('addMarker', {
+				'position': lat + "," + lon,
+				'bounds':true
+			});
 			$.each(data, function(i, item) {
 				var lat = item.current_location.point.coordinates[1];
 				var lon = item.current_location.point.coordinates[0];
 				var html = "<b>" + item.company_name + "</b>";
-				if(item.pictures.length > 0)
-					html += "<div class='content'><img src='/images/vendors/"+item.pictures[0]+"'/></div>";
+				html += "<div class='content'><img src='"+imgArray[item.current_location.type]+"'/></div>";
 				if(item.current_location.description != null)
-					html += "<div>" + item.current_location.description + "</div>";
+					html += "<p>" + item.current_location.description + "</p>";
 				else
-					html += "<div>" + item.description + "</div>";
-				html += "<div>Providing you with <b>" + item.current_location.type + "</b> until about <b>";
-				html += new Date(Date.parse(item.current_location.expires)).toLocaleTimeString() + "</b></div>";
-				var $marker = $("#map_canvas").gmap('addMarker', {'position': lat + "," + lon});
+					html += "<p>" + item.description + "</p>";
+				html += "<p>Providing you with <b>" + item.current_location.type + "</b> until about <b>";
+				html += new Date(Date.parse(item.current_location.expires)).toLocaleTimeString() + "</b></p>";
+				var $marker = $("#map_canvas").gmap('addMarker', {
+					'position': lat + "," + lon, 
+					'bounds':true,
+					'icon': iconArray[item.current_location.type]
+				});
 				$marker.click(function() {
 					$('#map_canvas').gmap('openInfoWindow', {'content': html}, this);
 				});
@@ -198,7 +242,7 @@ $(document).ready(function() {
 $(document).ready(function() {
 	var options = {
 		center: new google.maps.LatLng(36.80358081325186, 126.93521976470947),
-		zoom: 8
+		zoom: 17
 	};
 	$('#map_canvas').gmap(options).bind('init', function(ev, map) {
 		var canvas = $("#map_canvas");
@@ -207,7 +251,9 @@ $(document).ready(function() {
 			var lon = event.latLng.lng();
 			var distance = $("#dis").val();
 			var data = "lat=" + lat + "&lon=" + lon + "&dis=" + distance;
-
+			window.lat = lat;
+			window.lon = lon;
+			console.log("change");
 			/*$.post('/api/points/query', data)
 			.success(function(res) {
 				canvas.gmap('clear', 'markers');
