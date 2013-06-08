@@ -21,9 +21,14 @@ exports.list = function(lat, lon, within, callback) {
 			$gt: new Date()
 		}
 	};
+	var limit_fields = {
+		_id: 0,
+		past_locations: 0,
+		private: 0
+	}
 	mongo.getCollection("vendors", function(err, col) {
 		if(err) return callback(err, null);
-		col.find(params).toArray(function(err, result) {
+		col.find(params, limit_fields).toArray(function(err, result) {
 			if(err) return callback(err, null);
 			console.log(result.length);
 			return callback(null, result);
