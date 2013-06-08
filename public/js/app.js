@@ -52,8 +52,25 @@ var refreshList = function() {
 				 var html = '<li class="span2"> <div class="thumbnail">';
                      html += '<img src="http://placehold.it/200x283" alt="ALT NAME"> ';
 				     html += '<p>' +item.company_name+'</p>';
+				     if(item.pictures.length > 0)
+				     // generic photos hack for thumbnails
+                       if (item.current_location.type == "food")
+                         html += "<img src='/images/vendors/"+item.pictures[0]+"'/>";
+                       else if (item.current_location.type == "shopping")
+                         html += "<img src='/images/vendors/"+item.pictures[0]+"'/>";
+                       else if (item.current_location.type == "party")
+                         html += "<img src='/images/vendors/"+item.pictures[0]+"'/>";
+                       else if (item.current_location.type == "music")
+                         html += "<img src='/images/vendors/"+item.pictures[0]+"'/>";
+                       else if (item.current_location.type == "exhibit")
+                         html += "<img src='http://placehold.it/200x283' alt='ALT NAME' />";
+                       
+                       else 
+                       html += "<div class='content'><img src='/images/vendors/"+item.pictures[0]+"'/></div>";
+                    
 				     if(item.current_location.description != null)
                          html += "<div>" + item.current_location.description + "</div>";
+
 				     html += '<p>' + item.current_location.type + '</p> ';
 				     html += '</div></div></li> ';          
    
