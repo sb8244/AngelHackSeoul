@@ -13,6 +13,8 @@ exports.create = function( app ) {
 	app.post('/login', login.process);
 	app.get('/logout', login.logout);
 	
+	//app.get('/logout', show.list);
+	
 	app.get('/api/v1/points/list', pointsAPI.list);
 	app.get('/api/v1/vendor/checkout', pointsAPI.checkOut);
 	app.get('/api/v1/vendor/checkin', pointsAPI.checkIn);

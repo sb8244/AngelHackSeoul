@@ -1,2 +1,17 @@
 extends layout
 
+.thumbnail.span.3
+    h3 pop.name
+      p pop.type
+      p pop.price
+      hr
+      #map_canvas(style='width: 450px; height: 210px;')
+      hr
+      img(src='http://placehold.it/450x500')
+      ul.unstyled
+        li
+          h4 pop.name
+        li pop.type
+        li pop.price
+        li pop.location
+        li pop.description
