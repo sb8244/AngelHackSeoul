@@ -17,4 +17,8 @@ block content
       li#pill-exhibit.active(data-type="exhibit")
         a(href='#')
           i(class="icon-camera-retro icon-large")
-  div#map_canvas
+  -if(nomap !== true) {
+    div#map_canvas
+  - } else {
+    div#pop_list
+  - }
