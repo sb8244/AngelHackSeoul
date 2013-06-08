@@ -1,7 +1,37 @@
+$(document).ready(function() {
+	if(geoPosition.init()) {
+		geoPosition.getCurrentPosition(success, error, {timeout: 10000, enableHighAccuracy: true});
+	} else {
+		error({code: 3});
+	}
+	function success(position) {
+		var lat = position.coords.latitude;
+		var lon = position.coords.longitude;
+		var latlng = new google.maps.LatLng(lat, lon);
+		self.get('map').panTo(latlng);
+		self.refresh();
+		var $marker = $("#map").gmap('addMarker', {'position': lat + "," + lon})
+	}
+	function error(err){ 
+		alert(err.code);
+		if(err.code == 1) {
+			//permission denied
+		} else if(err.code == 2) {
+			//position unavailble
+		} else if(err.code == 3) {
+			//timeout
+		}
+	}
+});
 
 $(document).ready(function() {
-	$("li").click(function() {
+	$(".nav-pills > li").click(function() {
 		$(this).toggleClass("active");
+		var elements = $(".nav-pills > li.active");
+		var activeTypes = $.map(elements,function(n,i) {
+			return $(elements[i]).data("type");
+		});
+		
 	});
 	$.get("/ajax/logged").success(function(html) {
 		$("#signup").remove();
