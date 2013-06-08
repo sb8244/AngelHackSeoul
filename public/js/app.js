@@ -157,6 +157,13 @@ $(document).ready(function() {
 		$("#signup").remove();
 		$("#signin").parent().parent().html(html);
 		$('.dropdown-toggle').dropdown();
+		$("#checkout").click(function() {
+			var endpoint = "/api/v1/vendor/checkOut";
+			$.get(endpoint).success(function(d) {
+				alert("You've checked out of your current location");
+				refresh();
+			});
+		});
 		$("#checkin").click(function() {
 			$.get("/checkin").success(function(html) {
 				$(".dropdown-menu").html(html);
@@ -165,7 +172,8 @@ $(document).ready(function() {
 						lat: lat,
 						lon: lon,
 						type: $("#type").val(),
-						hours: $("#hours").val()
+						hours: $("#hours").val(),
+						desc: $("#desc").val()
 					}
 					if(data.type == 'x' || data.hours == 'x') {
 						alert("Please set the event type and duration");
