@@ -9,12 +9,12 @@ $(document).ready(function() {
 	function success(position) {
 		lat = position.coords.latitude;
 		lon = position.coords.longitude;
-		refreshMap();
+		refresh();
 	}
 	function error(err){ 
 		lat = 37.507618;
 		lon = 127.04510849999997;
-		refreshMap();
+		refresh();
 		if(err.code == 1) {
 			//permission denied
 		} else if(err.code == 2) {
@@ -24,6 +24,38 @@ $(document).ready(function() {
 		}
 	}
 });
+var refresh = function() {
+	if($("#map_canvas").length != 0)
+			refreshMap();
+	else if($("#pop_list").length != 0)
+		refreshList();
+}
+var refreshList = function() {
+	if(lat != null && lon != null) {
+		var elements = $(".nav-pills > li.active");
+		var activeTypes = $.map(elements,function(n,i) {
+			return $(elements[i]).data("type");
+		});
+		var within = 10;
+		var data = {
+			types: activeTypes,
+			within: within,
+			lat: lat,
+			lon: lon
+		}
+		var query = $.param(data);
+		var endpoint = "/api/v1/points/list";
+
+		$.get(endpoint + "?" + query).success(function(data) {
+			$('#map_canvas').gmap('clear', 'markers');
+			$.each(data, function(i, item) {
+				console.log(item);
+			});
+		});
+	} else {
+		alert("No lat lon");
+	}
+}
 var refreshMap = function() {
 	if(lat != null && lon != null) {
 		var elements = $(".nav-pills > li.active");
@@ -43,7 +75,6 @@ var refreshMap = function() {
 		$.get(endpoint + "?" + query).success(function(data) {
 			$('#map_canvas').gmap('clear', 'markers');
 			$.each(data, function(i, item) {
-				window.d = Date.parse(item.current_location.expires);
 				var lat = item.current_location.point.coordinates[1];
 				var lon = item.current_location.point.coordinates[0];
 				var html = "<b>" + item.company_name + "</b>";
@@ -68,7 +99,7 @@ var refreshMap = function() {
 $(document).ready(function() {
 	$(".nav-pills > li").click(function() {
 		$(this).toggleClass("active");
-		refreshMap();
+		refresh();
 	});
 	$.get("/ajax/logged").success(function(html) {
 		$("#signup").remove();
@@ -93,7 +124,7 @@ $(document).ready(function() {
 						$.get(endpoint + "?" + query).success(function(d) {
 							alert("This " + data.type + " event has popped up for " + data.hours + " hours!");
 							$('.dropdown.open .dropdown-toggle').dropdown('toggle');
-							refreshMap();
+							refresh();
 						});
 						return false;
 					}
@@ -184,8 +215,10 @@ $(document).ready(function() {
 		resizeMap();
 	});
 	function resizeMap() {
-		var bottomNavPills = $(".nav-pills").position().top + $(".nav-pills").height() + 1;
-		$("#map_canvas").height($(this).height() - bottomNavPills);
+		if($(".nav-pills").length != 0) {
+			var bottomNavPills = $(".nav-pills").position().top + $(".nav-pills").height() + 1;
+			$("#map_canvas").height($(this).height() - bottomNavPills);
+		}
 	}
 	resizeMap();
 });
