@@ -38,12 +38,14 @@ exports.process = function(req, res) {
 		        if (err) throw err;
 		        vendorProvider.register(email, password, display_name, description, filename, function(err, result) {
 		        	if(err) throw err;
+	        		req.session.user_id = result[0]._id;
 		        	res.send(200);
 		        });
 		    });
 	    } else {
 	    	vendorProvider.register(email, password, display_name, description, null, function(err, result) {
 	        	if(err) throw err;
+	        	req.session.user_id = result[0]._id;
 	        	res.send(200);
 		    });
 	    }
