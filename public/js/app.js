@@ -49,7 +49,16 @@ var refreshList = function() {
 		$.get(endpoint + "?" + query).success(function(data) {
 			$('#map_canvas').gmap('clear', 'markers');
 			$.each(data, function(i, item) {
-				console.log(item);
+				 var html = '<li class="span2"> <div class="thumbnail">';
+                     html += '<img src="http://placehold.it/200x283" alt="ALT NAME"> ';
+				     html += '<p>' +item.company_name+'</p>';
+				     if(item.current_location.description != null)
+                         html += "<div>" + item.current_location.description + "</div>";
+				     html += '<p>' + item.current_location.type + '</p> ';
+				     html += '</div></div></li> ';          
+   
+   $("#pop_list").append(html)
+
 			});
 		});
 	} else {
@@ -222,3 +231,5 @@ $(document).ready(function() {
 	}
 	resizeMap();
 });
+
+
