@@ -33,7 +33,6 @@ exports.list = function(lat, lon, within, types, callback) {
 		if(err) return callback(err, null);
 		col.find(params, limit_fields).toArray(function(err, result) {
 			if(err) return callback(err, null);
-			console.log(require("util").inspect(result, {depth:99}));
 			return callback(null, result);
 		});
 	});

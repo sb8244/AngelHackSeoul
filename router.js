@@ -20,7 +20,6 @@ exports.create = function( app ) {
 
 	app.get('/ajax/logged', ajax.loggedIn);
 	
-	
 	app.get('/vendor/*', requireAuthentication);
 	app.get('/vendor', index.index);
 
