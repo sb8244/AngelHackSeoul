@@ -35,12 +35,11 @@ a {
 		margin-left: -20px;
 	}
 }
-@media (max-width: 350px) {
+@media (max-width: 450px) {
 	.brand { display: none !important; }
 }
 #pop_list .span6 {
 	margin-bottom: 10px;
-	margin-right: 10px;
 }
 .nav>li>a {
 	background-color: #eee;

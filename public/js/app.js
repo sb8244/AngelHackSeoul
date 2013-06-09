@@ -71,11 +71,12 @@ var refreshList = function() {
 
 		$.get(endpoint + "?" + query).success(function(data) {
 			$("#pop_list").html("");
+			var x = 0;
+			var html = "";
 			$.each(data, function(i, item) {
-				if(i % 2 == 1)
-					var html = "<div class='row-fluid'>";
-				else
-					var html = "<div>";
+				var close = false;
+				if(x % 2 == 0)
+					html += "<div class='row-fluid'>";
 			 	html += '<li class="span6"> <div class="thumbnail">';
 			 	html += "<h4>" + item.company_name + "</h4>";
                 html += '<img src="'+imgArray[item.current_location.type]+'" alt="ALT NAME"> ';
@@ -86,10 +87,12 @@ var refreshList = function() {
 			    html += "<p>Providing you with <b>" + item.current_location.type + "</b> until about <b>";
 				html += new Date(Date.parse(item.current_location.expires)).toLocaleTimeString() + "</b></p>";
 	
-			    html += '</div></div></li></div>';          
-   
-  				$("#pop_list").append(html);
+			    html += '</div></li>';
+			    if(x % 2 == 1)
+			    	html += '</div>';          
+   				x++;
 			});
+  			$("#pop_list").append(html);
 		});
 	} else {
 		alert("No lat lon");
